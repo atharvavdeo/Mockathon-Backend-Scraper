@@ -1,0 +1,28 @@
+# Core Dependencies
+fastapi
+uvicorn
+pydantic
+pydantic-settings
+
+# Language Detection
+langdetect
+
+# For Image OCR
+pytesseract
+Pillow
+
+# For FastAPI File Uploads
+python-multipart
+
+# Web Scraping
+beautifulsoup4
+requests
+validators
+lxml
+
+# For Text Summarization and Processing
+scikit-learn
+nltk
+
+# Other utilities
+python-dotenv
