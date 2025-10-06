@@ -10,27 +10,46 @@ from ..services.ocr_service import extract_text_from_image
 from ..services.text_processor import extract_key_sentences_and_truncate
 
 
-async def process_url_for_analysis(payload: URLInput) -> ModelInput:
+async def process_url_for_analysis(url_input: URLInput) -> ModelInput:
     """
-    Orchestrates the full pipeline for a URL:
-    Scrape -> Clean -> Extract Key Sentences -> Prepare for Model
+    Process and validate a URL input for analysis.
+    
+    Args:
+        url_input: URLInput containing the URL to process
+        
+    Returns:
+        ModelInput ready for analysis
+        
+    Raises:
+        ValueError: If URL is invalid or content cannot be extracted
     """
-    url = str(payload.url)
-    if not validators.url(url):
-        raise ValueError("Invalid URL format provided.")
-
-    scraped_article = scrape_article_content(url)
-    validated_article = clean_and_validate_article(scraped_article)
-
-    # Call the TF-IDF processor
-    processed_data = extract_key_sentences_and_truncate(
-        validated_article.title or "Untitled",
-        validated_article.body
-    )
-
+    url = url_input.url.strip()
+    
+    # Validate URL format
+    if not url.startswith(('http://', 'https://')):
+        raise ValueError("URL must start with http:// or https://")
+    
+    # Scrape article content
+    scraped = scrape_article_content(url)
+    
+    # Clean and process the text
+    cleaned = clean_and_validate_article(scraped)
+    
+    # Append source URL domain to body for analysis (helps with domain reputation)
+    body_with_source = f"{cleaned.body} Source: {url}"
+    
+    # Calculate word count
+    word_count = len(cleaned.body.split())
+    
+    # Validate minimum length
+    if word_count < 50:
+        raise ValueError("Article content is too short (minimum 50 characters)")
+    
     return ModelInput(
-        **processed_data,
-        source_url=str(validated_article.url)
+        title=cleaned.title,
+        body=body_with_source,
+        source_url=url,
+        word_count=word_count
     )
 
 

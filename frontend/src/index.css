@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body, #root { height: 100%; }
+body { @apply bg-slate-900; font-family: "Gabarito", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; }
+
+.font-darker-grotesque { font-family: "Darker Grotesque", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; }
+
+.glass-tab {
+  @apply bg-white/10 text-white/80 px-6 py-2 rounded-lg text-sm font-medium whitespace-nowrap flex items-center gap-2 border border-white/20 shadow-md backdrop-blur-md transition-all;
+}
+.glass-tab:hover { @apply bg-white/20 border-white/30 shadow-lg; }
+
+

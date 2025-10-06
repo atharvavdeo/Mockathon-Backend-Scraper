@@ -1,6 +1,7 @@
-"""Utility functions for the backend."""
+"""Utility functions for data cleaning and validation."""
 
 import re
+import logging
 from langdetect import detect, LangDetectException
 from ..models.detection_models import ScrapedArticle
 

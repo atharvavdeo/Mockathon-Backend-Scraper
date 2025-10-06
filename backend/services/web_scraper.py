@@ -1,7 +1,8 @@
 """Service for scraping web content."""
 
-import requests
+import httpx
 from bs4 import BeautifulSoup
+
 from ..models.detection_models import ScrapedArticle
 from ..config.settings import settings
 
@@ -22,9 +23,9 @@ def scrape_article_content(url: str) -> ScrapedArticle:
     headers = {"User-Agent": settings.SCRAPER_USER_AGENT}
     
     try:
-        response = requests.get(url, headers=headers, timeout=10)
+        response = httpx.get(url, headers=headers, timeout=10)
         response.raise_for_status()
-    except requests.RequestException as e:
+    except httpx.RequestError as e:
         raise ValueError(f"Failed to fetch URL: {e}")
     
     soup = BeautifulSoup(response.content, 'html.parser')
